@@ -1,0 +1,21 @@
+git --version
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+git init
+git status
+git add .
+git add filename.txt
+git commit -m "first commit"
+git log
+git diff
+git restore filename.txt
+git rm filename.txt
+git mv oldname.txt newname.txt
+git branch
+git branch new-branch
+git checkout new-branch
+git checkout main
+git merge new-branch
+git remote add origin https://github.com/username/repo.git
+git push -u origin main
+git pull
