@@ -1,0 +1,18 @@
+mongosh
+use myDatabase
+show dbs
+show collections
+db.createCollection("students")
+db.students.insertOne({name:"Vedant",age:20,city:"Mumbai"})
+db.students.insertMany([{name:"Amit",age:21},{name:"Rahul",age:22}])
+db.students.find()
+db.students.find().pretty()
+db.students.findOne({name:"Vedant"})
+db.students.find({age:{$gt:20}})
+db.students.updateOne({name:"Vedant"},{$set:{age:21}})
+db.students.updateMany({city:"Mumbai"},{$set:{city:"Navi Mumbai"}})
+db.students.updateOne({name:"Vedant"},{$inc:{age:1}})
+db.students.deleteOne({name:"Vedant"})
+db.students.deleteMany({age:{$lt:20}})
+db.students.drop()
+db.dropDatabase()
