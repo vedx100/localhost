@@ -1,0 +1,204 @@
+============================================================
+  register.html
+============================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h2>Register</h2>
+ 
+    <label>Full Name</label>
+    <input type="text" id="name" placeholder="Vedant Shinde" />
+    <p class="err" id="nameErr"></p>
+ 
+    <label>Email</label>
+    <input type="email" id="email" placeholder="vedant@email.com" />
+    <p class="err" id="emailErr"></p>
+ 
+    <label>Password</label>
+    <input type="password" id="pass" placeholder="Password" />
+    <p class="err" id="passErr"></p>
+ 
+    <button onclick="validate()">Register</button>
+    <p class="ok" id="success"></p>
+ 
+    <p class="link">Have an account? <a href="login.html">Login</a></p>
+  </div>
+ 
+  <script>
+    function validate() {
+      document.getElementById('nameErr').textContent  = '';
+      document.getElementById('emailErr').textContent = '';
+      document.getElementById('passErr').textContent  = '';
+      document.getElementById('success').textContent  = '';
+ 
+      var name  = document.getElementById('name').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var pass  = document.getElementById('pass').value;
+      var ok    = true;
+ 
+      if (!/^[A-Za-z ]{3,}$/.test(name)) {
+        document.getElementById('nameErr').textContent = 'Enter a valid name.';
+        ok = false;
+      }
+      if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        document.getElementById('emailErr').textContent = 'Enter a valid email.';
+        ok = false;
+      }
+      if (!pass) {
+        document.getElementById('passErr').textContent = 'Enter a password.';
+        ok = false;
+      }
+ 
+      if (ok) {
+        document.getElementById('success').textContent = 'Registration successful!';
+      }
+    }
+  </script>
+</body>
+</html>
+ 
+ 
+============================================================
+  login.html
+============================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h2>Login</h2>
+ 
+    <label>Email</label>
+    <input type="email" id="email" placeholder="vedant@email.com" />
+    <p class="err" id="emailErr"></p>
+ 
+    <label>Password</label>
+    <input type="password" id="pass" placeholder="Password" />
+    <p class="err" id="passErr"></p>
+ 
+    <button onclick="loginUser()">Login</button>
+    <p id="msg"></p>
+ 
+    <p class="link">No account? <a href="register.html">Register</a></p>
+  </div>
+ 
+  <script>
+    function loginUser() {
+      document.getElementById('emailErr').textContent = '';
+      document.getElementById('passErr').textContent  = '';
+      document.getElementById('msg').textContent      = '';
+      document.getElementById('msg').className        = '';
+ 
+      var email = document.getElementById('email').value.trim();
+      var pass  = document.getElementById('pass').value.trim();
+ 
+      if (!email) {
+        document.getElementById('emailErr').textContent = 'Enter your email.';
+        return;
+      }
+      if (!pass) {
+        document.getElementById('passErr').textContent = 'Enter your password.';
+        return;
+      }
+ 
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'users.json', true);
+      xhr.onload = function() {
+        var users = JSON.parse(xhr.responseText).users;
+        var found = false;
+        for (var i = 0; i < users.length; i++) {
+          if (users[i].email === email && users[i].password === pass) {
+            found = true;
+            break;
+          }
+        }
+        var msg = document.getElementById('msg');
+        if (found) {
+          msg.className   = 'ok';
+          msg.textContent = 'Login successful!';
+        } else {
+          msg.className   = 'err';
+          msg.textContent = 'Invalid email or password.';
+        }
+      };
+      xhr.send();
+    }
+  </script>
+</body>
+</html>
+ 
+ 
+============================================================
+  style.css
+============================================================
+* { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+body {
+  background: #0d0d0f;
+  color: #aaaabc;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.card {
+  background: #131316;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 2rem 2.2rem;
+  width: 100%;
+  max-width: 420px;
+}
+ 
+h2 { font-size: 1.6rem; font-weight: 600; color: #f0f0f5; margin-bottom: 1rem; }
+ 
+label { display: block; font-size: 0.82rem; margin-top: 0.9rem; margin-bottom: 0.3rem; }
+ 
+input {
+  display: block; width: 100%;
+  background: #0d0d0f; border: 1px solid #222;
+  color: #f0f0f5; border-radius: 7px;
+  padding: 10px 14px; font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem; outline: none;
+}
+input:focus { border-color: #7c6af7; }
+ 
+button {
+  width: 100%; margin-top: 1.4rem; padding: 11px;
+  background: #7c6af7; color: #fff; border: none;
+  border-radius: 7px; font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem; cursor: pointer;
+}
+button:hover { opacity: 0.85; }
+ 
+.err { font-size: 0.78rem; color: #f07070; margin-top: 0.3rem; }
+.ok  { font-size: 0.82rem; color: #6bcb77; margin-top: 0.75rem; }
+ 
+.link { font-size: 0.8rem; color: #555; margin-top: 1.2rem; text-align: center; }
+.link a { color: #7c6af7; text-decoration: none; }
+ 
+ 
+============================================================
+  users.json
+============================================================
+{
+  "users": [
+    { "email": "vedant@email.com", "password": "vedant123" },
+    { "email": "admin@test.com",   "password": "admin123"  }
+  ]
+}
+===========================================================
