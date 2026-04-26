@@ -1,0 +1,210 @@
+const express = require("express");
+const methodOverride = require("method-override");
+
+const app = express();
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
+app.use(express.static(".")); // Serve static files like CSS
+
+// In-memory data store for posts
+let posts = [];
+
+// HTML layout template
+const layout = (content) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Notes</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #cccccc;
+            letter-spacing: -0.02em;
+        }
+
+        .card {
+            background: #0a0a0a;
+            border: 1px solid #222222;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .btn-post {
+            background: #ffffff;
+            color: #000000;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-post:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        h2 {
+            margin: 0 0 12px 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        p {
+            margin: 0 0 16px 0;
+            color: #cccccc;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            font-family: inherit;
+            outline: none;
+            color: #ffffff;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #ffffff;
+        }
+
+        .del-btn {
+            color: #888888;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+
+        .del-btn:hover {
+            color: #ff6b6b;
+            background: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Notes</div>
+        ${content}
+    </div>
+    <script>
+        function deleteNote(id) {
+            if (confirm('Delete this note?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/' + id + '?_method=DELETE';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+</html>
+`;
+
+// Routes
+
+// Home page - display all posts
+app.get("/", (req, res) => {
+    const postsList = posts.map(post => `
+        <div class="card">
+            <button class="del-btn" type="button" onclick="deleteNote(${post.id})">×</button>
+            <h2>${post.title}</h2>
+            <p>${post.content}</p>
+        </div>
+    `).join("");
+
+    const content = `
+        ${postsList || '<p style="text-align: center; color: #888888;">No notes yet. Create your first one!</p>'}
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/new" class="btn-post">New Note</a>
+        </div>
+    `;
+
+    res.send(layout(content));
+});
+
+// New post form
+app.get("/new", (req, res) => {
+    const content = `
+        <div class="card">
+            <form action="/" method="POST">
+                <input name="title" placeholder="Note title" required>
+                <textarea name="content" placeholder="Write your note..." rows="6" required></textarea>
+                <div style="display: flex; gap: 12px; align-items: center; margin-top: 20px;">
+                    <button class="btn-post" type="submit">Save</button>
+                    <a href="/" style="color: #888888; text-decoration: none; font-size: 14px; padding: 10px 0;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    `;
+
+    res.send(layout(content));
+});
+
+// Create new post
+app.post("/", (req, res) => {
+    const newPost = {
+        id: Date.now(),
+        title: req.body.title,
+        content: req.body.content
+    };
+
+    posts.push(newPost);
+    res.redirect("/");
+});
+
+// Delete post
+app.delete("/:id", (req, res) => {
+    const postId = parseInt(req.params.id);
+    posts = posts.filter(post => post.id !== postId);
+    res.redirect("/");
+});
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+node node.js 
