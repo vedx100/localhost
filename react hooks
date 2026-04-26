@@ -1,0 +1,64 @@
+npx create-react-app exp8
+cd exp8
+npm start
+
+Replace the contents of src/App.js with the code below, then run npm start. Browser opens at http://localhost:3000
+
+Code (App.js):
+
+import React, { useState, useEffect, useRef, useContext, createContext } from "react";
+
+const ThemeContext = createContext();
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [theme, setTheme] = useState("light");
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    document.title = "Count: " + count;
+  }, [count]);
+
+  const bg = theme === "light" ? "#ffffff" : "#1e1e1e";
+  const color = theme === "light" ? "black" : "white";
+
+  return (
+    <ThemeContext.Provider value={theme}>
+      <div style={{ minHeight: "100vh", background: bg, color: color,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontFamily: "Arial" }}>
+
+        <div style={{ textAlign: "center" }}>
+          <h2>Counter App</h2>
+          <h1 style={{ fontSize: "80px" }}>{count}</h1>
+
+          <button onClick={() => setCount(count + 1)}>+ Increment</button>
+          &nbsp;&nbsp;
+          <button onClick={() => setCount(count - 1)}>- Decrement</button>
+          &nbsp;&nbsp;
+          <button onClick={() => setCount(0)}>Reset</button>
+
+          <br /><br />
+
+          <button ref={btnRef}
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+            Switch to {theme === "light" ? "Dark" : "Light"} Mode
+          </button>
+
+          <p>Current Theme: {theme}</p>
+        </div>
+      </div>
+    </ThemeContext.Provider>
+  );
+}
+
+export default App;
+
+Hooks Used:
+1. useState  - stores count and theme values
+2. useEffect - updates browser tab title when count changes
+3. useRef    - attached to the toggle button
+4. useContext - shares theme value across components
+
+Conclusion:
+In this experiment, we successfully created a simple Counter application using ReactJS that demonstrates the use of four React Hooks: useState, useEffect, useRef, and useContext. The app allows the user to increment, decrement, and reset a counter, and also toggle between light and dark mode.
