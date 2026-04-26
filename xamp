@@ -1,0 +1,120 @@
+Roll No: 124AX052
+Name: Vedant Deepak Shinde
+Batch: H3
+Experiment No: 7
+
+Aim:
+Create interactive web pages that fetch, display, and update data from MySQL databases dynamically based on user interactions using PHP.
+
+Theory:
+
+PHP:
+PHP stands for "PHP: Hypertext Preprocessor". It is a widely-used, open source server-side scripting language. PHP scripts are executed on the server and it is free to download and use.
+
+Why PHP?
+- PHP runs on all major platforms (Windows, Linux, Unix, Mac OS X, etc.)
+- PHP is compatible with all leading web servers (Nginx, Apache, Microsoft IIS, etc.)
+- PHP supports a wide range of databases (MySQL, PostgreSQL, MS SQL, Oracle, MongoDB, etc.)
+- PHP is free. Download it from www.php.net
+- PHP is easy to learn and runs efficiently on the server side
+
+What is XAMPP?
+XAMPP stands for Cross-Platform (X), Apache (A), MariaDB (M), PHP (P), and Perl (P). It allows developers to test and debug their websites or applications in a local environment before deploying them. It is one of the most popular and user-friendly local server solutions.
+
+- Cross-Platform (X): Runs on Windows, Linux, and macOS.
+- Apache (A): Web server that handles requests and delivers web content.
+- MariaDB (M): A fork of MySQL, used for managing the database of web applications.
+- PHP (P): Server-side scripting language used to create dynamic web content.
+- Perl (P): High-level scripting language for text processing and automation.
+
+Connecting PHP to MySQL:
+To connect PHP to MySQL, use the MySQLi (MySQL Improved) or PDO (PHP Data Objects) extension. Both support prepared statements which are important for security against SQL injection attacks.
+
+Code:
+
+db.php:
+<?php
+  $server    = "localhost";
+  $user_name = "root";
+  $password  = "";
+  $db_name   = "phpexperiment_db";
+
+  $conn = new mysqli($server, $user_name, $password, $db_name);
+
+  if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+  }
+?>
+
+login.php:
+<?php
+  include "db.php";
+
+  if (isset($_POST['submit'])) {
+      $email    = $_POST['email'];
+      $password = $_POST['password'];
+
+      $sql    = "SELECT * FROM users WHERE email='$email' AND password='$password'";
+      $result = mysqli_query($conn, $sql);
+
+      if ($result->num_rows > 0) {
+          echo "Login Successful.";
+      } else {
+          echo "Invalid email or password. <a href='registration.php'>Register here</a>";
+      }
+  }
+?>
+
+<!DOCTYPE html>
+<html>
+<head><title>Login</title></head>
+<body>
+  <h2>Login Form</h2>
+  <form action="login.php" method="post">
+    <input type="email" name="email" placeholder="Enter Your Email"><br><br>
+    <input type="password" name="password" placeholder="Enter Your Password"><br><br>
+    <input type="submit" name="submit" value="Login">
+  </form>
+</body>
+</html>
+
+registration.php:
+<?php
+  include "db.php";
+
+  if (isset($_POST['submit'])) {
+      $name     = $_POST['name'];
+      $email    = $_POST['email'];
+      $password = $_POST['password'];
+
+      $sql    = "INSERT INTO users(name, email, password) VALUES('$name', '$email', '$password')";
+      $result = mysqli_query($conn, $sql);
+
+      if ($result) {
+          echo "Registered Successfully!";
+      } else {
+          echo "Error: " . $conn->error;
+      }
+  }
+?>
+
+<!DOCTYPE html>
+<html>
+<head><title>Registration</title></head>
+<body>
+  <h2>Registration Form</h2>
+  <form action="registration.php" method="post">
+    <input type="text" name="name" placeholder="Enter Your Name"><br><br>
+    <input type="email" name="email" placeholder="Enter Your Email"><br><br>
+    <input type="password" name="password" placeholder="Enter Your Password"><br><br>
+    <input type="submit" name="submit" value="Register">
+  </form>
+  <br>
+  <a href="login.php">Go to Login</a>
+</body>
+</html>
+
+Conclusion:
+In this Web Technology experiment, we successfully developed a Registration and Login form using HTML, PHP, and MySQL with XAMPP. HTML was used to create the structure of the web pages, PHP handled the backend logic and form processing, and MySQL was used to store and verify user information during registration and login.
+
+This experiment helped us understand how frontend and backend technologies work together to create a functional web application. We also learned how user data can be stored in a database and how basic authentication works in a login system. Overall, this practical improved our understanding of web development, form handling, and database connectivity using PHP and MySQL.
