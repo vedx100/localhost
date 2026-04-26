@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="main">
+    <h2>Weather App</h2>
+
+    <div class="search">
+        <input type="text" id="city" placeholder="Enter city">
+        <button onclick="getWeather()">Search</button>
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function getWeather() {
+    var city = document.getElementById("city").value.trim();
+
+    if(city === ""){
+        alert("Please enter city name");
+        return;
+    }
+
+    var apiKey = "756119c4c73cf2a3c3423192a750f29f";
+    var url = "https://api.openweathermap.org/data/2.5/weather?q=" 
+              + city + "&appid=" + apiKey + "&units=metric";
+
+    var req = new XMLHttpRequest();
+    req.open("GET", url, true);
+
+    req.onload = function() {
+        var output = document.getElementById("result");
+
+        if(req.status == 200){
+            var data = JSON.parse(req.responseText);
+
+            var html = "";
+            html += "<h3>" + data.name + "</h3>";
+            html += "<p><b>Temperature:</b> " + data.main.temp + " °C</p>";
+            html += "<p><b>Condition:</b> " + data.weather[0].main + "</p>";
+            html += "<p><b>Humidity:</b> " + data.main.humidity + "%</p>";
+            html += "<p><b>Wind:</b> " + data.wind.speed + " m/s</p>";
+
+            output.innerHTML = html;
+        } else {
+            output.innerHTML = "<p>City not found</p>";
+        }
+    };
+
+    req.onerror = function(){
+        document.getElementById("result").innerHTML = "Error fetching data";
+    };
+
+    req.send();
+}
+</script>
+
+</body>
+</html>
+
+
+
+style.css
+
+body {
+    font-family: Arial, sans-serif;
+    background: #e6f2ff;
+}
+
+.main {
+    width: 350px;
+    margin: 80px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+.search {
+    margin-bottom: 15px;
+}
+
+input {
+    padding: 7px;
+    width: 60%;
+}
+
+button {
+    padding: 7px 10px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+#result {
+    margin-top: 15px;
+    font-size: 16px;
+}
