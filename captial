@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Country & Capital</title>
+    <link rel="stylesheet" href="sty.css">
+</head>
+<body>
+
+    <div class="card">
+        <h2>Country</h2>
+
+        <select id="country" onchange="showCapital()">
+            <option value="">Select country</option>
+            <option value="India">India</option>
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+            <option value="Japan">Japan</option>
+            <option value="France">France</option>
+        </select>
+
+        <p id="capital"></p>
+    </div>
+
+    <script>
+        function showCapital() {
+            var c = document.getElementById("country").value;
+
+            var data = {
+                India: "New Delhi",
+                USA: "Washington D.C.",
+                UK: "London",
+                Japan: "Tokyo",
+                France: "Paris"
+            };
+
+            document.getElementById("capital").innerHTML =
+                c ? data[c] : "";
+        }
+    </script>
+
+</body>
+</html>
+
+      style.css 
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+#capital {
+    margin-top: 15px;
+    color: #333;
+    font-weight: bold;
+    font-size: 18px;
+}
